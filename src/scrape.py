@@ -41,7 +41,7 @@ def process_page(url: str, page: str) -> tuple:
 
 
 process_page(root_url, pri_file)
-print('Remaining links to process:', set(links) - dones)
+print('Pending links to process:', set(links) - dones)
 while len(set(links) - dones) > 0:
     for link in (set(links) - dones):
         print('Link being processed:', link)
@@ -63,7 +63,7 @@ while len(set(links) - dones) > 0:
                 print(f'Failure: {url}\t Status code: {response.status_code}')
         dones.add(link)
 
-    print('Remaining links to process:', set(links) - dones)
+    print('Pending links to process:', set(links) - dones)
     print('\n')
 print('Error urls:', error_urls)
 with open('error_urls.txt', 'w', encoding='utf-8') as f:
