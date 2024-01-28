@@ -15,7 +15,7 @@ headers = {
     'Accept-Encoding': 'gzip, deflate, br'}
 
 root_url = "https://docs.llamaindex.ai/en/stable/"
-with open('LlamaIndex.html', 'r', encoding='utf-8') as f:
+with open(os.path.join('base','LlamaIndex.html'), 'r', encoding='utf-8') as f:
     pri_file = f.read()
 error_urls = set()
 
