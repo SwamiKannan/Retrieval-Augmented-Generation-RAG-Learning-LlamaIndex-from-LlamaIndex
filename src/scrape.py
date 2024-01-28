@@ -65,6 +65,6 @@ while len(set(links) - dones) > 0:
 
     print('Remaining links to process:', set(links) - dones)
     print('\n')
-print('Errored out urls:', error_urls)
+print('Error urls:', error_urls)
 with open('error_urls.txt', 'w', encoding='utf-8') as f:
     f.write('\n'.join(error_urls))
