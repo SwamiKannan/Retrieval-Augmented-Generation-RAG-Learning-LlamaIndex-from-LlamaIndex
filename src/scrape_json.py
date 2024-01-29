@@ -16,7 +16,7 @@ headers = {
     'Accept-Encoding': 'gzip, deflate, br'}
 
 root_url = "https://docs.llamaindex.ai/en/stable/"
-with open('LlamaIndex.html', 'r', encoding='utf-8') as f:
+with open(os.path.join('base','LlamaIndex.html'), 'r', encoding='utf-8') as f:
     pri_file = f.read()
 error_urls = set()
 
@@ -69,6 +69,10 @@ while len(set(links) - dones) > 0:
 
     print('Remaining links to process:', set(links) - dones)
     print('\n')
+pending = "None :)" if len(set(links) - dones) == 0 else set(links) - dones
+print('Remaining links to process:', pending)
+error_urls = 'None :)' if len(error_urls)>0 else error_urls
 print('Errored out urls:', error_urls)
-with open('error_urls.txt', 'w', encoding='utf-8') as f:
-    f.write('\n'.join(error_urls))
+if error_urls:
+    with open('error_urls.txt', 'w', encoding='utf-8') as f:
+        f.write('\n'.join(error_urls))
