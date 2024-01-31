@@ -1,6 +1,6 @@
 from dotenv import load_dotenv
 from llama_index import ServiceContext, StorageContext, Document, VectorStoreIndex
-from llama_index.node_parser import SemanticSplitterNodeParser
+from llama_index.node_parser import SimpleNodeParser
 from llama_index.embeddings.openai import OpenAIEmbedding
 from llama_index.llms import OpenAI
 from llama_index.vector_stores import ChromaVectorStore
@@ -28,7 +28,7 @@ DATA_DIR = '../data_json'
 # Text processing
 embed_model = OpenAIEmbedding(model=EMBEDDINGS, embed_batch_size=100)
 
-splitter = SemanticSplitterNodeParser(
+splitter = SimpleNodeParser(
     buffer_size=1,
     breakpoint_percentile_threshold=95, embed_model=embed_model
 )
@@ -64,6 +64,7 @@ def ingestion():
     documents = [process_file(filename)
                  for filename in os.listdir(os.path.join(DATA_DIR))]
     print('Documents created')
+    print('Splitting documents....')
     docs = splitter.get_nodes_from_documents(documents)
     print(
         f'Documents split...{len(documents)} split into {len(docs)} documents')
