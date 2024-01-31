@@ -61,6 +61,7 @@ def ingestion():
     documents = [process_file(filename)
                  for filename in os.listdir(os.path.join(DATA_DIR))]
     print(f'{len(documents)} documents created')
+    print('Initiating vector store update.....')
     index = VectorStoreIndex.from_documents(
         documents=documents, storage_context=storage_context, service_context=service_context, show_progress=True)
     print('Ingestion complete...')
