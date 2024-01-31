@@ -21,24 +21,21 @@ CHUNK_OVERLAP = 20
 TEMPERATURE = 0
 EMBED_BATCH_SIZE = 100
 
-DATA_DIR = '../data_json'
+DATA_DIR = 'data_json'
 
 # Initializing the relevant objects / tools
 
 # Text processing
-embed_model = OpenAIEmbedding(model=EMBEDDINGS, embed_batch_size=100)
+embed_model = OpenAIEmbedding(model=EMBEDDINGS)
 
-splitter = SimpleNodeParser(
-    buffer_size=1,
-    breakpoint_percentile_threshold=95, embed_model=embed_model
-)
+splitter = SimpleNodeParser.from_defaults(chunk_size=500, chunk_overlap=50)
 embedding = OpenAIEmbedding()
 
 # LLM
 llm = OpenAI(model=MODEL, temperature=TEMPERATURE)
 
 # VectorStores
-db = chromadb.PersistentClient(path="./chroma_llamaindex")
+db = chromadb.PersistentClient(path="./llamassist_chroma")
 chroma_collection = db.get_or_create_collection("llamaindex-assistant")
 vectorstore = ChromaVectorStore(
     chroma_collection=chroma_collection, override=True)
@@ -50,7 +47,6 @@ storage_context = StorageContext.from_defaults(vector_store=vectorstore)
 
 
 def process_file(file_name: str):
-    print(file_name)
     with open(os.path.join(DATA_DIR, file_name), 'r', encoding='utf=8') as f:
         file = json.load(f)
         text = file['text']
@@ -61,15 +57,12 @@ def process_file(file_name: str):
 
 
 def ingestion():
+    print(f'{len(os.listdir(os.path.join(DATA_DIR)))} files identified')
     documents = [process_file(filename)
                  for filename in os.listdir(os.path.join(DATA_DIR))]
-    print('Documents created')
-    print('Splitting documents....')
-    docs = splitter.get_nodes_from_documents(documents)
-    print(
-        f'Documents split...{len(documents)} split into {len(docs)} documents')
+    print(f'{len(documents)} documents created')
     index = VectorStoreIndex.from_documents(
-        documents=docs, storage_context=storage_context, service_context=service_context, show_progress=True)
+        documents=documents, storage_context=storage_context, service_context=service_context, show_progress=True)
     print('Ingestion complete...')
 # document = process_file('TimescaleVectorStore.json')
 
