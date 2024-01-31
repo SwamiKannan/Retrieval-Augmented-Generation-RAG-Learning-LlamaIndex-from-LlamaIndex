@@ -64,7 +64,7 @@ def ingestion():
     print('Initiating vector store update.....')
     index = VectorStoreIndex.from_documents(
         documents=documents, storage_context=storage_context, service_context=service_context, show_progress=True)
-    print('Ingestion complete...')
+    print('Ingestion complete. Model is now ready to answer your queries....')
 # document = process_file('TimescaleVectorStore.json')
 
 
