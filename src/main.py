@@ -9,10 +9,10 @@ nest_asyncio.apply()
 '''
 args parse
 callbacks
-describe_steps: If you want all the steps to be followed
+show_perf: If you want all the steps to be followed
 '''
 callback = True
-steps = False
+show_perf = False
 
 
 def process_metadata(metadata):
@@ -29,9 +29,6 @@ query_engine = index.as_query_engine()
 
 def qa(question, steps=False):
     response = query_engine.query(question)
-    print('\n')
-    print(response)
-    print('\n')
     metadata = response.metadata
     context = '\n'.join(
         [node.text for node in response.source_nodes]) if steps else None
@@ -40,11 +37,11 @@ def qa(question, steps=False):
 
 if __name__ == "__main__":
     question = "What is a LlamaIndex query engine?"
-    response, metadata, context = qa(question, steps)
+    response, metadata, context = qa(question, show_perf, True)
     print('\n'+'Answer:')
     print(response)
-    if steps:
-        print('\n'+'Context:')
-        print(context)
-    print('\n'+'References:')
-    process_metadata(metadata)
+    # if show_perf:
+    #     print('\n'+'Performance analysis:')
+    #     print(context)
+    # print('\n'+'References:')
+    # process_metadata(metadata)
