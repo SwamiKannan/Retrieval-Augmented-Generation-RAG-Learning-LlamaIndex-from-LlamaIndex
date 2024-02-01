@@ -6,6 +6,14 @@ from llama_index.tools import QueryEngineTool, ToolMetadata
 
 nest_asyncio.apply()
 
+'''
+args parse
+callbacks
+describe_steps: If you want all the steps to be followed
+'''
+callback = True
+steps = False
+
 
 def process_metadata(metadata):
     for i, item in enumerate(metadata.values()):
@@ -15,20 +23,28 @@ def process_metadata(metadata):
         print('***********************************************************')
 
 
-index = get_index()
+index = get_index(callback)
 query_engine = index.as_query_engine()
 
 
-def qa(question):
+def qa(question, steps):
     response = query_engine.query(question)
+    print('\n')
     print(response)
     print('\n')
     metadata = response.metadata
-    print('References:')
-    process_metadata(metadata)
-    return response, metadata
+    context = '\n'.join(
+        [node.text for node in response.source_nodes]) if steps else None
+    return response, metadata, context
 
 
 if __name__ == "__main__":
     question = "What is a LlamaIndex query engine?"
-    response, metadata = qa(question)
+    response, metadata, context = qa(question, steps)
+    print('\n'+'Answer:')
+    print(response)
+    if steps:
+        print('\n'+'Context:')
+        print(context)
+    print('\n'+'References:')
+    process_metadata(metadata)
