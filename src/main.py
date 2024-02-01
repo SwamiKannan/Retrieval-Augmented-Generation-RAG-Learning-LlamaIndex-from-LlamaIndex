@@ -27,7 +27,7 @@ index = get_index(callback)
 query_engine = index.as_query_engine()
 
 
-def qa(question, steps):
+def qa(question, steps=False):
     response = query_engine.query(question)
     print('\n')
     print(response)
