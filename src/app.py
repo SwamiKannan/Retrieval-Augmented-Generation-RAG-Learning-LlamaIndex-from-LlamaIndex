@@ -2,6 +2,7 @@ import streamlit as st
 import os
 from llama_index.memory import ChatMemoryBuffer
 from query import get_index
+from main import qa
 
 st.set_page_config(
     page_title='Welcome to your Llama Index Assistant',
@@ -49,9 +50,15 @@ query = st.chat_input("Ask me a question about LlamaIndex")
 if query:
     st.session_state.messages.append(create_message('user', query))
 
-if st.session_state.messages[-1]['role'] == 'assistant':
+if st.session_state.messages[-1]['role'] == 'user':
     question = st.session_state.messages[-1]['content']
-
+    response, metadata, context = qa(question, st.session_state.chat_engine)
+    message_response = create_message('assistant', response)
+    st.session_state.messages.append(message_response)
+    if metadata:
+        message_metadata = create_message(
+            'assistant', 'Here are the references for my data:\n'+' **** '.join(metadata))
+        st.session_state.messages.append(message_metadata)
 
 for message in st.session_state['messages']:
     with st.chat_message(message['role']):
