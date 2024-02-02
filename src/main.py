@@ -1,8 +1,7 @@
 from query import get_index
 from ingestion import ingestion
 import nest_asyncio
-from llama_index.query_engine import SubQuestionQueryEngine
-from llama_index.tools import QueryEngineTool, ToolMetadata
+
 
 nest_asyncio.apply()
 
@@ -27,7 +26,7 @@ index = get_index(callback)
 query_engine = index.as_query_engine()
 
 
-def qa(question, steps=False):
+def qa(question, steps=False, query_engine=query_engine):
     response = query_engine.query(question)
     metadata = response.metadata
     context = '\n'.join(
@@ -37,11 +36,11 @@ def qa(question, steps=False):
 
 if __name__ == "__main__":
     question = "What is a LlamaIndex query engine?"
-    response, metadata, context = qa(question, show_perf, True)
+    response, metadata, context = qa(question, show_perf)
     print('\n'+'Answer:')
     print(response)
-    # if show_perf:
-    #     print('\n'+'Performance analysis:')
-    #     print(context)
-    # print('\n'+'References:')
-    # process_metadata(metadata)
+    if show_perf:
+        print('\n'+'Performance analysis:')
+        print(context)
+    print('\n'+'References:')
+    process_metadata(metadata)
