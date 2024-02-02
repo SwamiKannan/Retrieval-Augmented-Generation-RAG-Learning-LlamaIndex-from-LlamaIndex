@@ -36,7 +36,8 @@ llm = OpenAI(model=MODEL, temperature=TEMPERATURE)
 
 # VectorStores
 db = chromadb.PersistentClient(path="./llamassist_chroma")
-chroma_collection = db.get_or_create_collection("llamaindex-assistant")
+chroma_collection = db.get_or_create_collection(
+    "llamaindex-assistant", override=True)
 vectorstore = ChromaVectorStore(
     chroma_collection=chroma_collection, override=True)
 
@@ -60,6 +61,9 @@ def ingestion():
     print(f'{len(os.listdir(os.path.join(DATA_DIR)))} files identified')
     documents = [process_file(filename)
                  for filename in os.listdir(os.path.join(DATA_DIR))]
+    for doc in documents:
+        if "chroma" in doc.text:
+            print('Chroma document present:\t', doc.metadata['header'])
     print(f'{len(documents)} documents created')
     print('Initiating vector store update.....')
     index = VectorStoreIndex.from_documents(
