@@ -53,11 +53,12 @@ def get_index(callback=False):
 
 
 def qa(question, query_engine, steps=False):
-    response = query_engine.query(question)
+    response = query_engine.chat(question)
     metadata = response.metadata
+    text_response = response.response
     context = '\n'.join(
         [node.text for node in response.source_nodes]) if steps else None
-    return response, metadata, context
+    return text_response, metadata, context
 
 
 # Testing to see if the data is loaded correctly
