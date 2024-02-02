@@ -52,13 +52,14 @@ if query:
 
 if st.session_state.messages[-1]['role'] == 'user':
     question = st.session_state.messages[-1]['content']
-    response, metadata, context = qa(question, st.session_state.chat_engine)
-    message_response = create_message('assistant', response)
-    st.session_state.messages.append(message_response)
-    if metadata:
-        message_metadata = create_message(
-            'assistant', 'Here are the references for my data:\n'+' **** '.join(metadata))
-        st.session_state.messages.append(message_metadata)
+    with st.spinner('Thinking....'):
+        response, metadata, context = qa(question, st.session_state.chat_engine)
+        message_response = create_message('assistant', response)
+        st.session_state.messages.append(message_response)
+        if metadata:
+            message_metadata = create_message(
+                'assistant', 'Here are the references for my data:\n'+' **** '.join(metadata))
+            st.session_state.messages.append(message_metadata)
 
 for message in st.session_state['messages']:
     with st.chat_message(message['role']):
