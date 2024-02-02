@@ -7,6 +7,8 @@ from llama_index import VectorStoreIndex, ServiceContext
 from dotenv import load_dotenv
 from llama_index.callbacks import LlamaDebugHandler, CallbackManager
 
+import streamlit as st
+
 load_dotenv()
 
 # Parameters
@@ -32,6 +34,7 @@ storage_context = StorageContext.from_defaults(vector_store=vector_store)
 # setup index
 
 
+@st.cache_resource(show_spinner=False)
 def get_index(callback=False):
     if callback:
         debug_handler = LlamaDebugHandler(print_trace_on_end=True)
