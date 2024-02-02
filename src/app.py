@@ -20,7 +20,7 @@ st.text('Check refresh')
 with st.sidebar:
     add_radio = st.radio(
         "Choose a data source",
-        ("Langchain", "LlamaIndex")
+        ("Langchain (WIP)", "LlamaIndex")
     )
 
 # Create index and chat_engine
@@ -31,5 +31,5 @@ db = index.as_chat_engine(
     memory=memory,
     prompt='You are a librarian chatbot helping users answer questions based on the LlamaIndex documentation and provide code examples from the documentation when required.',
     verbose=True)
-
-st.session_state['chat_engine'] = db
+if 'chat_engine' not in st.session_state.keys():
+    st.session_state['chat_engine'] = db
