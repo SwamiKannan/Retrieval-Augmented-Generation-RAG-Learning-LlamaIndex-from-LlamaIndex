@@ -1,5 +1,11 @@
 import streamlit as st
 
+st.set_page_config(
+    page_title='Welcome to the Llama Index Assistant',
+    layout='wide',
+    page_icon=':llama:'
+)
+
 
 def set_page_container_style(
     max_width: int = 1100, max_width_100_percent: bool = False,
@@ -28,15 +34,10 @@ def set_page_container_style(
     )
 
 
-st.set_page_config(
-    page_title='Welcome to the Llama Index Assistant',
-    layout='wide',
-    page_icon=':llama:'
-)
-
 set_page_container_style(
     max_width=1100, max_width_100_percent=True,
     padding_top=0, padding_right=10, padding_left=5, padding_bottom=10
 )
+
 st.image('images/header.jpg')
 st.text('Check refresh')
