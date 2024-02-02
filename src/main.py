@@ -1,7 +1,7 @@
 from query import get_index
 from ingestion import ingestion
 import nest_asyncio
-
+from llama_index.memory import ChatMemoryBuffer
 
 nest_asyncio.apply()
 
@@ -15,32 +15,34 @@ show_perf = False
 
 
 def process_metadata(metadata):
-    for i, item in enumerate(metadata.values()):
-        print(f'Reference {i+1}')
-        print(f"Page name: {item['name']}")
-        print(f"Link: {item['url']}")
-        print('***********************************************************')
+    return [f"Reference {i+1}\nPage name: {item['name']}Link: {item['url']}" for i, item in enumerate(metadata.values())]
 
 
 index = get_index(callback)
 query_engine = index.as_query_engine()
 
 
-def qa(question, steps=False, query_engine=query_engine):
-    response = query_engine.query(question)
-    metadata = response.metadata
+def qa(question, chat_engine, steps=False):
+    response_query = query_engine.query(question)
+    response = chat_engine.chat(question).response
+    metadata = response_query.metadata
     context = '\n'.join(
         [node.text for node in response.source_nodes]) if steps else None
-    return response, metadata, context
+    metadata_sources = process_metadata(metadata) if metadata else None
+    return response_query.response, metadata_sources, context
 
 
 if __name__ == "__main__":
+    memory = ChatMemoryBuffer.from_defaults(token_limit=1500)
+    chat_engine = index.as_query_engine()
     question = "What is a LlamaIndex query engine?"
-    response, metadata, context = qa(question, show_perf)
+    response = query_engine.query(question)
+    response.response
     print('\n'+'Answer:')
-    print(response)
-    if show_perf:
-        print('\n'+'Performance analysis:')
-        print(context)
-    print('\n'+'References:')
-    process_metadata(metadata)
+    print(response.response)
+    print(type(response.response))
+    # if show_perf:
+    #     print('\n'+'Performance analysis:')
+    #     print(context)
+    # print('\n'+'References:')
+    # process_metadata(metadata)
