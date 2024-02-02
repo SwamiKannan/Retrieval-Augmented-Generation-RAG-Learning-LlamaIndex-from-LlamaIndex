@@ -23,9 +23,16 @@ with st.sidebar:
         ("Langchain (WIP)", "LlamaIndex")
     )
 
+
+def create_message(role, content):
+    assert role == 'user' or role == "assistant"
+    return {"role": role, "content": content}
+
+
 # Create index and chat_engine
 memory = ChatMemoryBuffer.from_defaults(token_limit=1500)
-index = get_index()
+with st.spinner('Loading index....'):
+    index = get_index()
 db = index.as_chat_engine(
     chat_mode='context',
     memory=memory,
@@ -33,3 +40,19 @@ db = index.as_chat_engine(
     verbose=True)
 if 'chat_engine' not in st.session_state.keys():
     st.session_state['chat_engine'] = db
+
+if 'messages' not in st.session_state.keys():
+    st.session_state['messages'] = [create_message(
+        "assistant", "Ask me a question about Llama Index's open source library")]
+
+query = st.chat_input("Ask me a question about LlamaIndex")
+if query:
+    st.session_state.messages.append(create_message('user', query))
+
+if st.session_state.messages[-1]['role'] == 'assistant':
+    question = st.session_state.messages[-1]['content']
+
+
+for message in st.session_state['messages']:
+    with st.chat_message(message['role']):
+        st.write(message['content'])
