@@ -52,6 +52,14 @@ def get_index(callback=False):
     return index
 
 
+def qa(question, query_engine, steps=False):
+    response = query_engine.query(question)
+    metadata = response.metadata
+    context = '\n'.join(
+        [node.text for node in response.source_nodes]) if steps else None
+    return response, metadata, context
+
+
 # Testing to see if the data is loaded correctly
 if __name__ == "__main__":
     index = get_index()
