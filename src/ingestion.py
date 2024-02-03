@@ -1,19 +1,20 @@
 from dotenv import load_dotenv
 from llama_index import ServiceContext, StorageContext, Document, VectorStoreIndex
 from llama_index.node_parser import SimpleNodeParser
-from llama_index.embeddings.openai import OpenAIEmbedding
-from llama_index.llms import OpenAI
+from llama_index.embeddings.huggingface import HuggingFaceEmbedding
+from llama_index.llms import HuggingFaceLLM
 from llama_index.vector_stores import ChromaVectorStore
 import chromadb
-
 import os
 import json
 
-load_dotenv()
+# load_dotenv()
 
 # Parameters
-MODEL = 'gpt-3.5-turbo'
-EMBEDDINGS = 'text-embedding-3-small'
+MODEL = 'teknium/OpenHermes-2.5-Mistral-7B'
+MODEL_LOCAL = "E:\\models\\Mistral-7b"
+EMBEDDINGS = 'sentence-transformers/all-MiniLM-L6-v2'
+CACHE_DIR = "E:\\Embeddings\\all-MiniLM-L6-v2"
 
 CHUNK_SIZE = 500
 CHUNK_OVERLAP = 20
@@ -26,18 +27,27 @@ DATA_DIR = 'data_json'
 # Initializing the relevant objects / tools
 
 # Text processing
-embed_model = OpenAIEmbedding(model=EMBEDDINGS)
+embed_model = HuggingFaceEmbedding(
+    model_name=EMBEDDINGS, cache_folder=CACHE_DIR)
 
 splitter = SimpleNodeParser.from_defaults(chunk_size=500, chunk_overlap=50)
-embedding = OpenAIEmbedding()
 
 # LLM
-llm = OpenAI(model=MODEL, temperature=TEMPERATURE)
+llm = HuggingFaceLLM(
+    context_window=4096,
+    max_new_tokens=256,
+    generate_kwargs={"temperature": TEMPERATURE, "do_sample": False},
+    tokenizer_name=EMBEDDINGS,
+    model_name=MODEL,
+    device_map="auto",
+    stopping_ids=[50278, 50279, 50277, 1, 0],
+    tokenizer_kwargs={"max_length": 4096},
+)
 
 # VectorStores
 db = chromadb.PersistentClient(path="./llamassist_chroma")
 chroma_collection = db.get_or_create_collection(
-    "llamaindex-assistant", override=True)
+    "llamaindex-assistant")
 vectorstore = ChromaVectorStore(
     chroma_collection=chroma_collection, override=True)
 
@@ -63,7 +73,7 @@ def ingestion():
                  for filename in os.listdir(os.path.join(DATA_DIR))]
     for doc in documents:
         if "chroma" in doc.text:
-            print('Chroma document present:\t', doc.metadata['header'])
+            print('Chroma document present:\t', doc.metadata['name'])
     print(f'{len(documents)} documents created')
     print('Initiating vector store update.....')
     index = VectorStoreIndex.from_documents(
