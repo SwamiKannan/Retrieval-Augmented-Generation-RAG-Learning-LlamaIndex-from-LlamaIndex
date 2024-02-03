@@ -37,10 +37,8 @@ if __name__ == "__main__":
     chat_engine = index.as_query_engine()
     question = "What is a LlamaIndex query engine?"
     response = query_engine.query(question)
-    response.response
     print('\n'+'Answer:')
-    print(response.response)
-    print(type(response.response))
+
     # if show_perf:
     #     print('\n'+'Performance analysis:')
     #     print(context)
