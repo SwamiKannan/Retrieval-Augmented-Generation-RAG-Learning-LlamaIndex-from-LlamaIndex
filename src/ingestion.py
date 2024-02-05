@@ -2,25 +2,27 @@ from dotenv import load_dotenv
 from llama_index import ServiceContext, StorageContext, Document, VectorStoreIndex
 from llama_index.node_parser import SimpleNodeParser
 from llama_index.embeddings.huggingface import HuggingFaceEmbedding
-from llama_index.llms import HuggingFaceLLM
 from llama_index.vector_stores import ChromaVectorStore
+from llama_index.llms import LlamaCPP
+from llama_index.llms.llama_utils import messages_to_prompt, completion_to_prompt
+
 import chromadb
 import os
 import json
 
-# load_dotenv()
+load_dotenv()
 
 # Parameters
-MODEL = 'teknium/OpenHermes-2.5-Mistral-7B'
-MODEL_LOCAL = "E:\\models\\Mistral-7b"
-EMBEDDINGS = 'sentence-transformers/all-MiniLM-L6-v2'
-CACHE_DIR = "E:\\Embeddings\\all-MiniLM-L6-v2"
+MODEL = "E:\\models\\OpenHermes_Mistral_GGUF\\openhermes-2.5-mistral-7b.Q5_K_M.gguf"
+
+
+EMBED_MODEL = "BAAI/bge-small-en-v1.5"
+CACHE_DIR = "E:\\Embeddings\\mistral"
 
 CHUNK_SIZE = 500
 CHUNK_OVERLAP = 20
 
 TEMPERATURE = 0
-EMBED_BATCH_SIZE = 100
 
 DATA_DIR = 'data_json'
 
@@ -28,20 +30,29 @@ DATA_DIR = 'data_json'
 
 # Text processing
 embed_model = HuggingFaceEmbedding(
-    model_name=EMBEDDINGS, cache_folder=CACHE_DIR)
+    model_name=EMBED_MODEL, cache_folder=CACHE_DIR)
 
 splitter = SimpleNodeParser.from_defaults(chunk_size=500, chunk_overlap=50)
 
 # LLM
-llm = HuggingFaceLLM(
-    context_window=4096,
+llm = LlamaCPP(
+    # You can pass in the URL to a GGML model to download it automatically
+    # model_url='https://huggingface.co/TheBloke/OpenHermes-2.5-Mistral-7B-GGUF/blob/main/openhermes-2.5-mistral-7b.Q5_K_M.gguf',
+    # optionally, you can set the path to a pre-downloaded model instead of model_url
+    model_path="E:\\models\\OpenHermes_Mistral_GGUF\\openhermes-2.5-mistral-7b.Q5_K_M.gguf",
+    temperature=0.1,
     max_new_tokens=256,
-    generate_kwargs={"temperature": TEMPERATURE, "do_sample": False},
-    tokenizer_name=EMBEDDINGS,
-    model_name=MODEL,
-    device_map="auto",
-    stopping_ids=[50278, 50279, 50277, 1, 0],
-    tokenizer_kwargs={"max_length": 4096},
+    # llama2 has a context window of 4096 tokens, but we set it lower to allow for some wiggle room
+    context_window=4096,
+    # kwargs to pass to __call__()
+    generate_kwargs={},
+    # kwargs to pass to __init__()
+    # set to at least 1 to use GPU
+    model_kwargs={"n_gpu_layers": -1},
+    # transform inputs into Llama2 format
+    messages_to_prompt=messages_to_prompt,
+    completion_to_prompt=completion_to_prompt,
+    verbose=True,
 )
 
 # VectorStores
