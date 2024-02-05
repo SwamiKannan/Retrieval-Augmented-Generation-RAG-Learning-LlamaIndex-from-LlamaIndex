@@ -60,7 +60,9 @@ def get_index(callback=False):
 
 
 def process_metadata(source_nodes):
-    return [f"Reference {i+1}\nPage name: {item.metadata['name']}Link: {item.metadata['url']}" for i, item in enumerate(source_nodes)]
+    vals = [f"**Reference {i+1}**  \nPage name: {item.metadata['name']}Link: {item.metadata['url']}" for i,
+            item in enumerate(source_nodes)]
+    return 'Here are the references for my data:  \n  \n'+'  \n  \n'.join(vals)
 
 
 def qa(question, chat_engine, steps=False):
