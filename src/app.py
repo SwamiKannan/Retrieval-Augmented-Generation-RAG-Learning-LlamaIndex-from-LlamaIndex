@@ -1,8 +1,8 @@
 import streamlit as st
 import os
 from llama_index.memory import ChatMemoryBuffer
-from query import get_index
-from main import qa
+from query import get_index, qa, process_metadata
+# from main import qa
 
 st.set_page_config(
     page_title='Welcome to your Llama Index Assistant',
@@ -21,7 +21,7 @@ st.text('Check refresh')
 with st.sidebar:
     add_radio = st.radio(
         "Choose a data source",
-        ("Langchain (WIP)", "LlamaIndex")
+        ("LlamaIndex", "Langchain (WIP)")
     )
 
 
@@ -34,6 +34,7 @@ def create_message(role, content):
 memory = ChatMemoryBuffer.from_defaults(token_limit=1500)
 with st.spinner('Loading index....'):
     index = get_index()
+    print('LLM:', index.service_context.llm)
 db = index.as_chat_engine(
     chat_mode='context',
     memory=memory,
@@ -47,15 +48,18 @@ if 'messages' not in st.session_state.keys():
         "assistant", "Ask me a question about Llama Index's open source library")]
 
 query = st.chat_input("Ask me a question about LlamaIndex")
+
+# Starting the chat session
 if query:
     st.session_state.messages.append(create_message('user', query))
 
 if st.session_state.messages[-1]['role'] == 'user':
     question = st.session_state.messages[-1]['content']
     with st.spinner('Thinking....'):
-        response, metadata, context = qa(question, st.session_state.chat_engine)
+        response, sources, _ = qa(question, st.session_state.chat_engine)
         message_response = create_message('assistant', response)
         st.session_state.messages.append(message_response)
+        metadata = process_metadata(sources)
         if metadata:
             message_metadata = create_message(
                 'assistant', 'Here are the references for my data:\n'+' **** '.join(metadata))
