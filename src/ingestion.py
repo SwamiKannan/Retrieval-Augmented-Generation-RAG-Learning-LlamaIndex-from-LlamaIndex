@@ -26,9 +26,6 @@ TEMPERATURE = 0
 
 DATA_DIR = 'data_json'
 
-# Initializing the relevant objects / tools
-
-# Text processing
 embed_model = HuggingFaceEmbedding(
     model_name=EMBED_MODEL, cache_folder=CACHE_DIR)
 
@@ -42,14 +39,7 @@ llm = LlamaCPP(
     model_path="E:\\models\\OpenHermes_Mistral_GGUF\\openhermes-2.5-mistral-7b.Q5_K_M.gguf",
     temperature=0.1,
     max_new_tokens=256,
-    # llama2 has a context window of 4096 tokens, but we set it lower to allow for some wiggle room
     context_window=4096,
-    # kwargs to pass to __call__()
-    generate_kwargs={},
-    # kwargs to pass to __init__()
-    # set to at least 1 to use GPU
-    model_kwargs={"n_gpu_layers": -1},
-    # transform inputs into Llama2 format
     messages_to_prompt=messages_to_prompt,
     completion_to_prompt=completion_to_prompt,
     verbose=True,
