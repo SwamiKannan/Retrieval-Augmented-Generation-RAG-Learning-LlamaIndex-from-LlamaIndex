@@ -32,25 +32,6 @@ vector_store = ChromaVectorStore(chroma_collection=chroma_collection)
 
 # Setup llm
 llm = OpenAI(model='gpt-3.5-turbo', temperature=TEMPERATURE)
-# llm = LlamaCPP(
-#     # You can pass in the URL to a GGML model to download it automatically
-#     # model_url='https://huggingface.co/TheBloke/OpenHermes-2.5-Mistral-7B-GGUF/blob/main/openhermes-2.5-mistral-7b.Q5_K_M.gguf',
-#     # optionally, you can set the path to a pre-downloaded model instead of model_url
-#     model_path=MODEL,
-#     temperature=0.1,
-#     max_new_tokens=256,
-#     # llama2 has a context window of 4096 tokens, but we set it lower to allow for some wiggle room
-#     context_window=4096,
-#     # kwargs to pass to __call__()
-#     generate_kwargs={},
-#     # kwargs to pass to __init__()
-#     # set to at least 1 to use GPU
-#     model_kwargs={"n_gpu_layers": -1},
-#     # transform inputs into Llama2 format
-#     messages_to_prompt=messages_to_prompt,
-#     completion_to_prompt=completion_to_prompt,
-#     verbose=True,
-# )
 
 # Contexts
 storage_context = StorageContext.from_defaults(vector_store=vector_store)
@@ -101,20 +82,9 @@ if __name__ == "__main__":
         verbose=True)
 
     question = "How to setup a Chroma index"
-    # print('Retriever output:')
-    # # responses = retriever.retrieve(question)
-    # for i, response in enumerate(responses):
-    #     print('Reference ', i+1)
-    #     print(response.metadata['name'])
-    #     print(response.metadata['url'], '\n')
-    # print('\n\n\nLLM Output:')
     response, sources, _ = qa(question, chat)
 
     print(f'Answer: {response}\n')
     print('Sources')
-    # for i, source in enumerate(sources):
-    #     print(f'Reference {i+1}:')
-    #     print(f'Page name: {source.metadata["name"]}')
-    #     print(f'Page name: {source.metadata["url"]}')
     for item in process_metadata(sources):
         print(item)
