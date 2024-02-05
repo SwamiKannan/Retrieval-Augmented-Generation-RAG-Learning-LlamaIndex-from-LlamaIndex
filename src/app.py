@@ -59,10 +59,10 @@ if st.session_state.messages[-1]['role'] == 'user':
         response, sources, _ = qa(question, st.session_state.chat_engine)
         message_response = create_message('assistant', response)
         st.session_state.messages.append(message_response)
-        metadata = process_metadata(sources)
-        if metadata:
+        if sources:
+            metadata = process_metadata(sources)
             message_metadata = create_message(
-                'assistant', 'Here are the references for my data: \n'+'\n **** \n'.join(metadata))
+                'assistant', metadata)
             st.session_state.messages.append(message_metadata)
 
 for message in st.session_state['messages']:
