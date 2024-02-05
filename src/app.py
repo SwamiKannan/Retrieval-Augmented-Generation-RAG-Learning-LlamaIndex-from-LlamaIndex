@@ -2,7 +2,6 @@ import streamlit as st
 import os
 from llama_index.memory import ChatMemoryBuffer
 from query import get_index, qa, process_metadata
-# from main import qa
 
 st.set_page_config(
     page_title='Welcome to your Llama Index Assistant',
@@ -11,9 +10,7 @@ st.set_page_config(
     initial_sidebar_state='auto',
 
 )
-# style_head = "<style>h2 {text-align: center;} img {align: center;}</style>"
-# with st.columns(3)[1]:
-#     st.markdown(style_head, unsafe_allow_html=True)
+
 st.image(os.path.join("images", "app", "header.jpg"), width=600)
 st.header("Welcome to your LlamaIndex Assistant")
 
