@@ -85,10 +85,6 @@ def get_index(callback=False):
     return index
 
 
-index = get_index()
-query_engine = index.as_query_engine()
-
-
 def process_metadata(source_nodes):
     return [f"Reference {i+1}\nPage name: {item.metadata['name']}Link: {item.metadata['url']}" for i, item in enumerate(source_nodes)]
 
@@ -98,14 +94,13 @@ def qa(question, chat_engine, steps=False):
     context = '\n'.join(
         [node.text for node in response.source_nodes]) if steps else None
     sources = response.source_nodes
-    return response, sources, context
+    return response.response, sources, context
 
 
 # Testing to see if the data is loaded correctly
 if __name__ == "__main__":
     memory = ChatMemoryBuffer.from_defaults(token_limit=1500)
-    retriever = index.as_retriever(similarity_top_k=5)
-    query_engine = index.as_query_engine()
+    index = get_index()
     chat = index.as_chat_engine(
         chat_mode='context',
         memory=memory,
@@ -122,7 +117,7 @@ if __name__ == "__main__":
     # print('\n\n\nLLM Output:')
     response, sources, _ = qa(question, chat)
 
-    print(f'Answer: {response.response}\n')
+    print(f'Answer: {response}\n')
     print('Sources')
     # for i, source in enumerate(sources):
     #     print(f'Reference {i+1}:')
