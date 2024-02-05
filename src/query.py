@@ -1,25 +1,18 @@
-from functools import cache
 from llama_index.vector_stores import ChromaVectorStore
 import chromadb
 from llama_index.embeddings.huggingface import HuggingFaceEmbedding
-from llama_index.llms import HuggingFaceLLM
 from llama_index.storage import StorageContext
 from llama_index import VectorStoreIndex, ServiceContext
 from dotenv import load_dotenv
 from llama_index.callbacks import LlamaDebugHandler, CallbackManager
-from sklearn.metrics import top_k_accuracy_score
 from llama_index.memory import ChatMemoryBuffer
-from llama_index.llms.llama_utils import messages_to_prompt, completion_to_prompt
 from llama_index.llms.openai import OpenAI
-from llama_index.llms import LlamaCPP
 
 import streamlit as st
 
 load_dotenv()
 
 # Parameters
-# Parameters
-MODEL = "E:\\models\\OpenHermes_Mistral_GGUF\\openhermes-2.5-mistral-7b.Q5_K_M.gguf"
 
 EMBED_MODEL = "BAAI/bge-small-en-v1.5"
 CACHE_DIR = "E:\\Embeddings\\mistral"
