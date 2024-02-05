@@ -2,7 +2,9 @@ import streamlit as st
 import os
 from llama_index.memory import ChatMemoryBuffer
 from query import get_index, qa, process_metadata
+from css import page_bg_img
 
+# Setting layout
 st.set_page_config(
     page_title='Welcome to your Llama Index Assistant',
     layout='centered',
@@ -11,10 +13,11 @@ st.set_page_config(
 
 )
 
+st.markdown(page_bg_img, unsafe_allow_html=True)
+
 st.image(os.path.join("images", "app", "header.jpg"), width=600)
 st.header("Welcome to your LlamaIndex Assistant")
 
-st.text('Check refresh')
 with st.sidebar:
     add_radio = st.radio(
         "Choose a data source",
@@ -44,7 +47,7 @@ if 'messages' not in st.session_state.keys():
     st.session_state['messages'] = [create_message(
         "assistant", "Ask me a question about Llama Index's open source library")]
 
-query = st.chat_input("Ask me a question about LlamaIndex")
+query = st.chat_input("Enter question here...")
 
 # Starting the chat session
 if query:
@@ -59,7 +62,7 @@ if st.session_state.messages[-1]['role'] == 'user':
         metadata = process_metadata(sources)
         if metadata:
             message_metadata = create_message(
-                'assistant', 'Here are the references for my data:\n'+' **** '.join(metadata))
+                'assistant', 'Here are the references for my data: \n'+'\n **** \n'.join(metadata))
             st.session_state.messages.append(message_metadata)
 
 for message in st.session_state['messages']:
