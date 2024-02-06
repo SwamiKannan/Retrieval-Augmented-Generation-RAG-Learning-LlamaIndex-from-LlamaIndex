@@ -1,4 +1,7 @@
 # Learn LlamaIndex using a Llama Index helper
+<p align="center">
+  <img src = "https://github.com/SwamiKannan/Learning-LlamaIndex-from-LlamaIndex/blob/main/cover.jpg", width = 60%>
+</p>
 
 ## Introduction
 
