@@ -55,6 +55,7 @@ if query:
 for message in st.session_state['messages']:
     with st.chat_message(message['role']):
         st.write(message['content'])
+
 prev_msg = st.session_state.messages[-1]['content']
 if st.session_state.messages[-1]['role'] == 'user':
     question = st.session_state.messages[-1]['content']
@@ -62,8 +63,10 @@ if st.session_state.messages[-1]['role'] == 'user':
         response, sources, _ = qa(question, st.session_state.chat_engine)
         message_response = create_message('assistant', response)
         st.session_state.messages.append(message_response)
+        st.write(response)
         if sources:
             metadata = process_metadata(sources)
             message_metadata = create_message(
                 'assistant', metadata)
             st.session_state.messages.append(message_metadata)
+            st.write(metadata)
