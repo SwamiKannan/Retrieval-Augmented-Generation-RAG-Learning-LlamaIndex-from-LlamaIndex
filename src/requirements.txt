@@ -1,0 +1,7 @@
+chromadb==0.4.22
+llama_index==0.9.44
+milvus==2.3.5
+nest_asyncio==1.6.0
+python-dotenv==1.0.1
+streamlit==1.31.0
+openai
