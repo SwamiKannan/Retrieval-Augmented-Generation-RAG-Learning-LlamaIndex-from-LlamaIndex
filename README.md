@@ -9,7 +9,9 @@ I was trying to learn LlamaIndex and was getting a little frustrated by the synt
 
 ## Demo
 <p align = "center">
+  
 https://github.com/SwamiKannan/Learning-LlamaIndex-from-LlamaIndex/assets/65940566/d6ba5aae-45f6-4847-bf7e-89d0c332de96
+
 </p>
 
 <sub>
