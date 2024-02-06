@@ -67,8 +67,3 @@ if st.session_state.messages[-1]['role'] == 'user':
             message_metadata = create_message(
                 'assistant', metadata)
             st.session_state.messages.append(message_metadata)
-
-if st.session_state.messages[-1]['content'] != prev_msg:
-    for message in st.session_state['messages']:
-        with st.chat_message(message['role']):
-            st.write(message['content'])
