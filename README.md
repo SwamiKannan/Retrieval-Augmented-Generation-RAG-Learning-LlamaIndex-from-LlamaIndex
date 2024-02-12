@@ -7,6 +7,19 @@
 
 I was trying to learn LlamaIndex and was getting a little frustrated by the syntax since it was different from LangChain (with storage context and service context). Hence, to start it off, I decided to first build a RAG and a chat assistant that helps me navigate the documentation.
 
+## Usage
+1. Scraping the LlamaIndex website
+```
+cd src
+python scrape_json.py
+```
+
+2. Ingest the data into a vectordb:
+There are three vectordbs that you can use for storing your embeddings:
+a. Milvus
+```
+python igens
+```
 ## Demo
 <p align = "center">
   
