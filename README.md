@@ -28,6 +28,15 @@ c. Chromadb (Rest of the process is based on Chromadb"
 ```
 python ingestion.py
 ```
+### 3. Querying the vectordb
+There are two ways to query the database]
+#### Main.py
+
+
+#### Using the app
+```
+streamlit app.py
+```
 ## Demo
 <p align = "center">
   
