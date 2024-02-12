@@ -26,7 +26,7 @@ python ingestion-pinecone.py
 ```
 c. Chromadb (Rest of the process is based on Chromadb"
 ```
-
+python ingestion.py
 ```
 ## Demo
 <p align = "center">
