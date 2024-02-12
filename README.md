@@ -18,7 +18,7 @@ python scrape_json.py
 There are three vectordbs that you can use for storing your embeddings:
 a. Milvus
 ```
-python igens
+python ingestion-milvus.py
 ```
 ## Demo
 <p align = "center">
