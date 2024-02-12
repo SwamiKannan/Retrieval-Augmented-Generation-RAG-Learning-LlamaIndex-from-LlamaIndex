@@ -2,7 +2,7 @@ from query import get_index
 from ingestion import ingestion
 import nest_asyncio
 from llama_index.memory import ChatMemoryBuffer
-
+import argparse
 nest_asyncio.apply()
 
 '''
@@ -12,6 +12,12 @@ show_perf: If you want all the steps to be followed
 '''
 callback = True
 show_perf = False
+
+parser =argparse.ArgumentParser()
+
+parser.add_argument('question')
+args = parser.parse_args()
+question = args['question']
 
 
 def process_metadata(metadata):
@@ -35,7 +41,6 @@ def qa(question, chat_engine, steps=False):
 if __name__ == "__main__":
     memory = ChatMemoryBuffer.from_defaults(token_limit=1500)
     chat_engine = index.as_query_engine()
-    question = "What is a LlamaIndex query engine?"
     response = query_engine.query(question)
     print('\n'+'Answer:')
 
