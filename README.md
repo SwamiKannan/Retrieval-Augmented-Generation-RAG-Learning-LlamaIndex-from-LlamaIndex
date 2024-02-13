@@ -7,6 +7,13 @@
 
 I was trying to learn LlamaIndex and was getting a little frustrated by the syntax since it was different from LangChain (with storage context and service context). Hence, to start it off, I decided to first build a RAG and a chat assistant that helps me navigate the documentation.
 
+## Requirements
+Running this code as-is will require you to have an OpenAI account and an API key.
+### Get OpenAI key
+After creating an account <a href="https://platform.openai.com/signup/"> here </a>, get your API key as described <a href="https://help.openai.com/en/articles/4936850-where-do-i-find-my-api-key"> here </a>
+
+
+
 ## Usage
 ### 1. Scraping the LlamaIndex website
 ```
