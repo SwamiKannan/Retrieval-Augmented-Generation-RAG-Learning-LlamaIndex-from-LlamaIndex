@@ -11,8 +11,16 @@ I was trying to learn LlamaIndex and was getting a little frustrated by the synt
 Running this code as-is will require you to have an OpenAI account and an API key.
 ### Get OpenAI key
 After creating an account <a href="https://platform.openai.com/signup/"> here </a>, get your API key as described <a href="https://help.openai.com/en/articles/4936850-where-do-i-find-my-api-key"> here </a>
+### Store the OpenAI key in the env file
+1. Create a text file using Notepad and name it ".env"
+2. Open it and enter:
+```
+OPENAI_API_KEY= <the API key you just received>
+```
+3. Save it in the src folder
+4. The code will automatically pick up the API key when running
 
-
+#### Note: Please do not share this API key with anyone. They will directly be able to use your account and your credits for their usage. 
 
 ## Usage
 ### 1. Scraping the LlamaIndex website
